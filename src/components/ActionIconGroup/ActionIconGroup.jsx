@@ -2,10 +2,9 @@ import React from 'react';
 import { DeleteIcon, EditIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import { IconButton, Stack } from '@chakra-ui/react';
 import { ConfirmIconGroup } from '../';
-import { string, func, bool, number } from 'prop-types';
+import { func, bool, number } from 'prop-types';
 
 function ActionIconGroup({
-  fontSize,
   handlePreview,
   handleEdit,
   handleDelete,
@@ -17,21 +16,18 @@ function ActionIconGroup({
   id,
 }) {
   return displayConfirmGroup && selectedProdId === id ? (
-    <>
-      Delete?
-      <ConfirmIconGroup
-        handleConfirm={handleConfirm}
-        handleDecline={handleDecline}
-      />
-    </>
+    <ConfirmIconGroup
+      handleConfirm={handleConfirm}
+      handleDecline={handleDecline}
+    />
   ) : (
     <Stack spacing="2" direction="row">
       <IconButton
         variant="outline"
         colorScheme="teal"
         aria-label="Preview product"
-        fontSize={fontSize}
         icon={<InfoOutlineIcon />}
+        size="sm"
         isDisabled={isDisabled}
         onClick={handlePreview}
       />
@@ -39,8 +35,8 @@ function ActionIconGroup({
         variant="outline"
         colorScheme="yellow"
         aria-label="Edit product"
-        fontSize={fontSize}
         icon={<EditIcon />}
+        size="sm"
         isDisabled={isDisabled}
         onClick={handleEdit}
       />
@@ -48,8 +44,8 @@ function ActionIconGroup({
         variant="outline"
         colorScheme="red"
         aria-label="Delete product"
-        fontSize={fontSize}
         icon={<DeleteIcon />}
+        size="sm"
         isDisabled={isDisabled}
         onClick={handleDelete}
       />
@@ -58,7 +54,6 @@ function ActionIconGroup({
 }
 
 ActionIconGroup.propTypes = {
-  fontSize: string,
   handlePreview: func.isRequired,
   handleEdit: func.isRequired,
   handleDelete: func.isRequired,

@@ -1,16 +1,17 @@
 import React from 'react';
 import { CheckIcon, CloseIcon } from '@chakra-ui/icons';
-import { IconButton, Stack } from '@chakra-ui/react';
+import { IconButton, Stack, Text } from '@chakra-ui/react';
 import { func } from 'prop-types';
 
 function ConfirmIconGroup({ handleConfirm, handleDecline }) {
   return (
-    <Stack direction="row" spacing="2">
+    <Stack direction="row" align="center" spacing="1">
+      <Text fontSize="12px">Delete?</Text>
       <IconButton
         variant="outline"
         colorScheme="red"
         aria-label="Confirm"
-        fontSize="16px"
+        size="sm"
         icon={<CheckIcon />}
         onClick={handleConfirm}
       />
@@ -18,7 +19,7 @@ function ConfirmIconGroup({ handleConfirm, handleDecline }) {
         variant="outline"
         colorScheme="teal"
         aria-label="Decline"
-        fontSize="16px"
+        size="sm"
         icon={<CloseIcon />}
         onClick={handleDecline}
       />

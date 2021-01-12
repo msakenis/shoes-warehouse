@@ -11,9 +11,9 @@ import {
 } from '@chakra-ui/react';
 import { ActionIconGroup } from '../../../components';
 import ACTIONS from '../../../actions';
-import products from '../../../utils/products'; // temporary
+// import products from '../../../utils/products'; // temporary
 
-localStorage.setItem('products', JSON.stringify(products)); // temporary
+// localStorage.setItem('products', JSON.stringify(products)); // temporary
 
 function reducer(data, action) {
   switch (action.type) {
@@ -26,7 +26,7 @@ function reducer(data, action) {
         }
       });
 
-      localStorage.setItem('products', JSON.stringify(newData));
+      localStorage.setItem('products', JSON.stringify(newData)); // emulate db
       return newData;
 
     case ACTIONS.DELETE_PRODUCT:
@@ -34,7 +34,7 @@ function reducer(data, action) {
         (product) => product.id !== action.payload.id
       );
 
-      localStorage.setItem('products', JSON.stringify(productData));
+      localStorage.setItem('products', JSON.stringify(productData)); // emulate db
       return productData;
 
     default:
@@ -45,17 +45,17 @@ function reducer(data, action) {
 function ViewProducts() {
   const [data, dispatch] = useReducer(
     reducer,
-    JSON.parse(localStorage.getItem('products'))
+    JSON.parse(localStorage.getItem('products')) // getting init products data from local storage just to emulate DB
   );
   const [displayConfirmGroup, setDisplayConfirmGroup] = useState(false);
   const [selectedProdId, setSelectedProdId] = useState(0);
 
   return (
     <div>
-      <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="4">
+      <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="5">
         Products
       </Heading>
-      <Table variant="simple">
+      <Table variant="simple" mt="5">
         <Thead>
           <Tr>
             <Th>No.</Th>
@@ -77,7 +77,7 @@ function ViewProducts() {
                 <Td>{row.name}</Td>
                 <Td>{row.ean}</Td>
                 <Td>{row.type}</Td>
-                <Td>{row.weigth}</Td>
+                <Td>{row.weigth / 1000} kg</Td>
                 <Td>{row.color}</Td>
                 <Td>
                   <Checkbox
@@ -93,24 +93,24 @@ function ViewProducts() {
                 </Td>
                 <Td>
                   <ActionIconGroup
-                    fontSize="18px"
                     handlePreview={() => console.log('Previewed!' + row.id)}
                     handleEdit={() => console.log('Edited!' + row.id)}
                     handleDelete={() => {
-                      setDisplayConfirmGroup(true);
-                      setSelectedProdId(row.id);
+                      setDisplayConfirmGroup(true); // acticates confirm btns group to show
+                      setSelectedProdId(row.id); // sets selected product id
                     }}
-                    handleDecline={() => setDisplayConfirmGroup(false)}
+                    handleDecline={() => setDisplayConfirmGroup(false)} // if "X" clicked normal action buttons appear
                     handleConfirm={() =>
+                      // activates reducer hook with delete action, which filters and return data
                       dispatch({
                         type: ACTIONS.DELETE_PRODUCT,
                         payload: { id: row.id },
                       })
                     }
                     isDisabled={!row.active} // disables btns if not active
-                    displayConfirmGroup={displayConfirmGroup}
-                    id={row.id}
-                    selectedProdId={selectedProdId}
+                    displayConfirmGroup={displayConfirmGroup} // prop to show confirm btns
+                    id={row.id} // sends id of every product to component
+                    selectedProdId={selectedProdId} // sends only the clicked product id
                   />
                 </Td>
               </Tr>
