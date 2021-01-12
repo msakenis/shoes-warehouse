@@ -1,4 +1,5 @@
 import React, { useReducer, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Heading,
   Table,
@@ -49,13 +50,13 @@ function ViewProducts() {
   );
   const [displayConfirmGroup, setDisplayConfirmGroup] = useState(false);
   const [selectedProdId, setSelectedProdId] = useState(0);
-
+  const history = useHistory();
   return (
     <div>
-      <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="5">
+      <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
         Products
       </Heading>
-      <Table variant="simple" mt="5">
+      <Table variant="simple" mt="10">
         <Thead>
           <Tr>
             <Th>No.</Th>
@@ -93,7 +94,7 @@ function ViewProducts() {
                 </Td>
                 <Td>
                   <ActionIconGroup
-                    handlePreview={() => console.log('Previewed!' + row.id)}
+                    handlePreview={() => history.push(`/products/${row.id}`)}
                     handleEdit={() => console.log('Edited!' + row.id)}
                     handleDelete={() => {
                       setDisplayConfirmGroup(true); // acticates confirm btns group to show

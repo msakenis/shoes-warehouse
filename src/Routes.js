@@ -12,7 +12,10 @@ const ViewProductslazy = lazy(() =>
   import('./pages/Products/ViewProducts/ViewProducts')
 );
 const CreateProductlazy = lazy(() =>
-  import('./pages/Products//CreateProduct/CreateProduct')
+  import('./pages/Products/CreateProduct/CreateProduct')
+);
+const PreviewProductlazy = lazy(() =>
+  import('./pages/Products/PreviewProduct/PreviewProduct')
 );
 
 function Routes() {
@@ -31,6 +34,7 @@ function Routes() {
               path="/products/create"
               component={CreateProductlazy}
             />
+            <Route exact path="/products/:id" component={PreviewProductlazy} />
           </Switch>
         </Container>
       </Suspense>
