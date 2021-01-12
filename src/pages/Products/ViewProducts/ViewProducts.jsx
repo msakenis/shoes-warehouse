@@ -1,5 +1,28 @@
 import React, { useState } from 'react';
-import { Heading, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import {
+  Heading,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Checkbox,
+} from '@chakra-ui/react';
+import { ActionIconGroup } from '../../../components';
+
+function handleCheckbox(id, data, setData) {
+  let newData = data.map((product) => {
+    if (product.id === id) {
+      return { ...product, active: !product.active };
+    } else {
+      return product;
+    }
+  });
+
+  setData(newData);
+  localStorage.setItem('products', JSON.stringify(newData));
+}
 
 function ViewProducts() {
   const [data, setData] = useState(
@@ -34,8 +57,21 @@ function ViewProducts() {
                 <Td>{row.type}</Td>
                 <Td>{row.weigth}</Td>
                 <Td>{row.color}</Td>
-                <Td>checkbox</Td>
-                <Td>action buttons</Td>
+                <Td>
+                  <Checkbox
+                    colorScheme="green"
+                    isChecked={row.active}
+                    onChange={() => handleCheckbox(row.id, data, setData)}
+                  />
+                </Td>
+                <Td>
+                  <ActionIconGroup
+                    fontSize="18px"
+                    handlePreview={() => console.log('Previewed!' + row.id)}
+                    handleEdit={() => console.log('Edited!' + row.id)}
+                    handleDelete={() => console.log('Deleted!' + row.id)}
+                  />
+                </Td>
               </Tr>
             ))}
         </Tbody>
