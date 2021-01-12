@@ -20,8 +20,8 @@ function Routes() {
     <Router>
       <NavBar />
       <Suspense fallback={<Spinner size="xl" />}>
-        <Switch>
-          <Container maxW="6xl">
+        <Container maxW="6xl">
+          <Switch>
             <Route exact path="/">
               <Redirect to="/products" />
             </Route>
@@ -31,8 +31,8 @@ function Routes() {
               path="/products/create"
               component={CreateProductlazy}
             />
-          </Container>
-        </Switch>
+          </Switch>
+        </Container>
       </Suspense>
     </Router>
   );
