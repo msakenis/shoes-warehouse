@@ -97,7 +97,7 @@ function ViewProducts() {
                 <Td>
                   <ActionIconGroup
                     handlePreview={() => history.push(`/products/${row.id}`)}
-                    handleEdit={() => console.log('Edited!' + row.id)}
+                    handleEdit={() => history.push(`/products/${row.id}/edit`)}
                     handleDelete={() => {
                       setDisplayConfirmGroup(true); // acticates confirm btns group to show
                       setSelectedProdId(row.id); // sets selected product id

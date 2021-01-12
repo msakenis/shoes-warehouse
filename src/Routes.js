@@ -17,6 +17,9 @@ const CreateProductlazy = lazy(() =>
 const PreviewProductlazy = lazy(() =>
   import('./pages/Products/PreviewProduct/PreviewProduct')
 );
+const EditProductlazy = lazy(() =>
+  import('./pages/Products/EditProduct/EditProduct')
+);
 
 function Routes() {
   return (
@@ -35,6 +38,11 @@ function Routes() {
               component={CreateProductlazy}
             />
             <Route exact path="/products/:id" component={PreviewProductlazy} />
+            <Route
+              exact
+              path="/products/:id/edit"
+              component={EditProductlazy}
+            />
           </Switch>
         </Container>
       </Suspense>
