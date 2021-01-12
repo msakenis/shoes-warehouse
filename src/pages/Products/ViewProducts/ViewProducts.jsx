@@ -12,9 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { ActionIconGroup } from '../../../components';
 import ACTIONS from '../../../actions';
-// import products from '../../../utils/products'; // temporary
-
-// localStorage.setItem('products', JSON.stringify(products)); // temporary
 
 function reducer(data, action) {
   switch (action.type) {
@@ -51,6 +48,7 @@ function ViewProducts() {
   const [displayConfirmGroup, setDisplayConfirmGroup] = useState(false);
   const [selectedProdId, setSelectedProdId] = useState(0);
   const history = useHistory();
+
   return (
     <div>
       <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
@@ -63,7 +61,7 @@ function ViewProducts() {
             <Th>Name</Th>
             <Th>EAN</Th>
             <Th>Type</Th>
-            <Th>Weigth</Th>
+            <Th>Weight</Th>
             <Th>Color</Th>
             <Th>Active</Th>
             <Th>Actions</Th>
@@ -73,17 +71,21 @@ function ViewProducts() {
           {data &&
             data.map((row, index) => (
               // changes color to ligher to look like disabled if not active
-              <Tr key={index} color={!row.active && 'gray.200'}>
+
+              <Tr
+                key={index}
+                color={!(String(row.active) === 'true') && 'gray.200'}
+              >
                 <Td>{index + 1}</Td>
                 <Td>{row.name}</Td>
                 <Td>{row.ean}</Td>
                 <Td>{row.type}</Td>
-                <Td>{row.weigth / 1000} kg</Td>
+                <Td>{row.weight / 1000} kg</Td>
                 <Td>{row.color}</Td>
                 <Td>
                   <Checkbox
                     colorScheme="green"
-                    isChecked={row.active}
+                    isChecked={String(row.active) === 'true'} // chakra radio returns booleans as strings so changing it to boolean type
                     onChange={() =>
                       dispatch({
                         type: ACTIONS.HANDLE_CHECKBOX,
