@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer, useState } from 'react';
 import {
   Heading,
   Table,
@@ -10,24 +10,45 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { ActionIconGroup } from '../../../components';
+import ACTIONS from '../../../actions';
+import products from '../../../utils/products'; // temporary
 
-function handleCheckbox(id, data, setData) {
-  let newData = data.map((product) => {
-    if (product.id === id) {
-      return { ...product, active: !product.active };
-    } else {
-      return product;
-    }
-  });
+localStorage.setItem('products', JSON.stringify(products)); // temporary
 
-  setData(newData);
-  localStorage.setItem('products', JSON.stringify(newData));
+function reducer(data, action) {
+  switch (action.type) {
+    case ACTIONS.HANDLE_CHECKBOX:
+      let newData = data.map((product) => {
+        if (product.id === action.payload.id) {
+          return { ...product, active: !product.active };
+        } else {
+          return product;
+        }
+      });
+
+      localStorage.setItem('products', JSON.stringify(newData));
+      return newData;
+
+    case ACTIONS.DELETE_PRODUCT:
+      let productData = data.filter(
+        (product) => product.id !== action.payload.id
+      );
+
+      localStorage.setItem('products', JSON.stringify(productData));
+      return productData;
+
+    default:
+      return data;
+  }
 }
 
 function ViewProducts() {
-  const [data, setData] = useState(
+  const [data, dispatch] = useReducer(
+    reducer,
     JSON.parse(localStorage.getItem('products'))
   );
+  const [displayConfirmGroup, setDisplayConfirmGroup] = useState(false);
+  const [selectedProdId, setSelectedProdId] = useState(0);
 
   return (
     <div>
@@ -50,7 +71,8 @@ function ViewProducts() {
         <Tbody>
           {data &&
             data.map((row, index) => (
-              <Tr key={index}>
+              // changes color to ligher to look like disabled if not active
+              <Tr key={index} color={!row.active && 'gray.200'}>
                 <Td>{index + 1}</Td>
                 <Td>{row.name}</Td>
                 <Td>{row.ean}</Td>
@@ -61,7 +83,12 @@ function ViewProducts() {
                   <Checkbox
                     colorScheme="green"
                     isChecked={row.active}
-                    onChange={() => handleCheckbox(row.id, data, setData)}
+                    onChange={() =>
+                      dispatch({
+                        type: ACTIONS.HANDLE_CHECKBOX,
+                        payload: { id: row.id },
+                      })
+                    }
                   />
                 </Td>
                 <Td>
@@ -69,7 +96,21 @@ function ViewProducts() {
                     fontSize="18px"
                     handlePreview={() => console.log('Previewed!' + row.id)}
                     handleEdit={() => console.log('Edited!' + row.id)}
-                    handleDelete={() => console.log('Deleted!' + row.id)}
+                    handleDelete={() => {
+                      setDisplayConfirmGroup(true);
+                      setSelectedProdId(row.id);
+                    }}
+                    handleDecline={() => setDisplayConfirmGroup(false)}
+                    handleConfirm={() =>
+                      dispatch({
+                        type: ACTIONS.DELETE_PRODUCT,
+                        payload: { id: row.id },
+                      })
+                    }
+                    isDisabled={!row.active} // disables btns if not active
+                    displayConfirmGroup={displayConfirmGroup}
+                    id={row.id}
+                    selectedProdId={selectedProdId}
                   />
                 </Td>
               </Tr>
