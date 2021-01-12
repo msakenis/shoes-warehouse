@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 function createRandomEANNumber() {
+  // randomly generates 13digit number
   return Math.floor(Math.random() * 1000000000000 + 1000000000000);
 }
 
@@ -62,7 +63,7 @@ function CreateProduct() {
   const toast = useToast();
 
   return (
-    <div>
+    <>
       <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
         Create Product
       </Heading>
@@ -159,7 +160,7 @@ function CreateProduct() {
           </Button>
         </form>
       </Stack>
-    </div>
+    </>
   );
 }
 

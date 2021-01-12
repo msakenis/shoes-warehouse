@@ -110,7 +110,7 @@ function ViewProducts() {
                         payload: { id: row.id },
                       })
                     }
-                    isDisabled={!row.active} // disables btns if not active
+                    isDisabled={!(String(row.active) === 'true')} // disables btns if not active
                     displayConfirmGroup={displayConfirmGroup} // prop to show confirm btns
                     id={row.id} // sends id of every product to component
                     selectedProdId={selectedProdId} // sends only the clicked product id
