@@ -5,21 +5,33 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import { Spinner } from '@chakra-ui/react';
+import { Spinner, Container } from '@chakra-ui/react';
+import { NavBar } from './components';
 
 const ViewProductslazy = lazy(() =>
   import('./pages/Products/ViewProducts/ViewProducts')
+);
+const CreateProductlazy = lazy(() =>
+  import('./pages/Products//CreateProduct/CreateProduct')
 );
 
 function Routes() {
   return (
     <Router>
+      <NavBar />
       <Suspense fallback={<Spinner size="xl" />}>
         <Switch>
-          <Route exact path="/">
-            <Redirect to="/products" />
-          </Route>
-          <Route exact path="/products" component={ViewProductslazy} />
+          <Container maxW="6xl">
+            <Route exact path="/">
+              <Redirect to="/products" />
+            </Route>
+            <Route exact path="/products" component={ViewProductslazy} />
+            <Route
+              exact
+              path="/products/create"
+              component={CreateProductlazy}
+            />
+          </Container>
         </Switch>
       </Suspense>
     </Router>
