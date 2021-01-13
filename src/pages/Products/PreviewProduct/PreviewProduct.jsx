@@ -43,8 +43,12 @@ function PreviewProduct() {
             <Td>{product.color}</Td>
           </Tr>
           <Tr>
-            <Th>Current Quantity:</Th>
+            <Th>Current Quantity(pcs):</Th>
             <Td>{product.currentQnty}</Td>
+          </Tr>
+          <Tr>
+            <Th>Current Price:</Th>
+            <Td>{product.price} &euro;</Td>
           </Tr>
           <Tr>
             <Th>Active:</Th>
