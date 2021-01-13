@@ -11,6 +11,7 @@ import {
   Checkbox,
   Button,
   Box,
+  useToast,
 } from '@chakra-ui/react';
 import { ActionIconGroup, NumberField } from '../../../components';
 import ACTIONS from '../../../actions';
@@ -29,14 +30,18 @@ function ViewProducts() {
     setDefaultPrices(data)
   );
   const history = useHistory();
-
+  const toast = useToast();
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         dispatch({
           type: ACTIONS.UPDATE_PRODUCTS,
-          payload: { quantity: enteredQntyValues, price: enteredPriceValues },
+          payload: {
+            quantity: enteredQntyValues,
+            price: enteredPriceValues,
+            toast: toast,
+          },
         });
         setEnteredQntyValues({});
       }}

@@ -45,6 +45,13 @@ export function reducer(data, action) {
         return product;
       });
       localStorage.setItem('products', JSON.stringify(updatedProducts));
+      action.payload.toast({
+        title: 'Updated successfully!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top',
+      });
       return updatedProducts;
 
     default:
