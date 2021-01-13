@@ -9,6 +9,8 @@ import {
   Th,
   Td,
   Checkbox,
+  Input,
+  Button,
 } from '@chakra-ui/react';
 import { ActionIconGroup } from '../../../components';
 import ACTIONS from '../../../actions';
@@ -34,10 +36,52 @@ function reducer(data, action) {
 
       localStorage.setItem('products', JSON.stringify(productData)); // emulate db
       return productData;
+    case ACTIONS.UPDATE_PRODUCTS:
+      let updatedProducts = data.map((product) => {
+        // most iteractions with data would do in back-end. In front end usually you fetch already filtered data
+        if (action.payload.quantity[product.id]) {
+          return {
+            ...product,
+            currentQnty:
+              (+product.currentQnty || 0) +
+                +action.payload.quantity[product.id] <
+              0
+                ? 0
+                : (+product.currentQnty || 0) +
+                  +action.payload.quantity[product.id], // if current qnty lower than 0 return 0, qnty cannot be negative
+          };
+        } else if (action.payload.price[product.id] >= 0) {
+          return {
+            ...product,
+            price: action.payload.price[product.id] || 0,
+          };
+        } else {
+          return product;
+        }
+      });
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+      return updatedProducts;
 
     default:
       return data;
   }
+}
+function showUpdateBtn(enteredQntyValues, enteredPriceValues, data) {
+  const qntyValueArr = Object.values(enteredQntyValues);
+  const priceValueArr = Object.values(enteredPriceValues);
+  const defaultPriceArr = Object.values(setDefaultPrices(data));
+
+  return (
+    !qntyValueArr.length === 0 || //check if no values were changed do not show the button update
+    !qntyValueArr.every((item) => item === 0) || //check if all values 0 then no need to show button either
+    !(JSON.stringify(priceValueArr) === JSON.stringify(defaultPriceArr)) // check if any changes were made to prices and show button if yes
+  );
+}
+
+function setDefaultPrices(data) {
+  const dataObj = {};
+  data.map((item) => Object.assign(dataObj, { [item.id]: item.price }));
+  return dataObj;
 }
 
 function ViewProducts() {
@@ -47,10 +91,23 @@ function ViewProducts() {
   );
   const [displayConfirmGroup, setDisplayConfirmGroup] = useState(false);
   const [selectedProdId, setSelectedProdId] = useState(0);
+  const [enteredQntyValues, setEnteredQntyValues] = useState({});
+  const [enteredPriceValues, setEnteredPriceValues] = useState(
+    setDefaultPrices(data)
+  );
   const history = useHistory();
 
   return (
-    <div>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        dispatch({
+          type: ACTIONS.UPDATE_PRODUCTS,
+          payload: { quantity: enteredQntyValues, price: enteredPriceValues },
+        });
+        setEnteredQntyValues({});
+      }}
+    >
       <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
         Products
       </Heading>
@@ -63,6 +120,9 @@ function ViewProducts() {
             <Th>Type</Th>
             <Th>Weight</Th>
             <Th>Color</Th>
+            <Th>Quantity</Th>
+            <Th>Change Quantity</Th>
+            <Th>Price (&euro;)</Th>
             <Th>Active</Th>
             <Th>Actions</Th>
           </Tr>
@@ -81,6 +141,37 @@ function ViewProducts() {
                 <Td>{row.type}</Td>
                 <Td>{row.weight / 1000} kg</Td>
                 <Td>{row.color}</Td>
+                <Td>{row.currentQnty || 0}</Td>
+                <Td>
+                  {
+                    <Input
+                      type="number"
+                      minW="60px"
+                      value={enteredQntyValues[row.id] || ''}
+                      onChange={(e) => {
+                        setEnteredQntyValues({
+                          ...enteredQntyValues,
+                          [row.id]: +e.target.value,
+                        });
+                      }}
+                    />
+                  }
+                </Td>
+                <Td>
+                  {
+                    <Input
+                      type="number"
+                      minW="60px"
+                      value={enteredPriceValues[row.id] || ''}
+                      onChange={(e) => {
+                        setEnteredPriceValues({
+                          ...enteredPriceValues,
+                          [row.id]: +e.target.value,
+                        });
+                      }}
+                    />
+                  }
+                </Td>
                 <Td>
                   <Checkbox
                     colorScheme="green"
@@ -119,7 +210,10 @@ function ViewProducts() {
             ))}
         </Tbody>
       </Table>
-    </div>
+      {showUpdateBtn(enteredQntyValues, enteredPriceValues, data) && (
+        <Button type="submit">Update</Button>
+      )}
+    </form>
   );
 }
 
