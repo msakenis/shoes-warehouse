@@ -31,10 +31,12 @@ function ViewProducts() {
   );
   const history = useHistory();
   const toast = useToast();
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
+
         dispatch({
           type: ACTIONS.UPDATE_PRODUCTS,
           payload: {
@@ -87,10 +89,11 @@ function ViewProducts() {
                       min={-9999999}
                       isDisabled={!(String(row.active) === 'true')}
                       value={enteredQntyValues[row.id] || ''}
+                      pattern="^[-+,0-9]*$"
                       handleChange={(value) => {
                         setEnteredQntyValues({
                           ...enteredQntyValues,
-                          [row.id]: +value,
+                          [row.id]: value,
                         });
                       }}
                     />
@@ -108,7 +111,7 @@ function ViewProducts() {
                       handleChange={(value) => {
                         setEnteredPriceValues({
                           ...enteredPriceValues,
-                          [row.id]: +value,
+                          [row.id]: value,
                         });
                       }}
                     />

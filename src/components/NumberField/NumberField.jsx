@@ -16,6 +16,7 @@ function NumberField({
   handleChange,
   step,
   precision,
+  pattern,
 }) {
   return (
     <NumberInput
@@ -30,6 +31,7 @@ function NumberField({
       onChange={handleChange}
       step={step}
       precision={precision}
+      pattern={pattern}
     >
       <NumberInputField />
       <NumberInputStepper>
@@ -44,10 +46,11 @@ NumberField.propTypes = {
   max: number.isRequired,
   min: number.isRequired,
   isDisabled: bool.isRequired,
-  value: oneOfType([string, number]).isRequired,
+  value: oneOfType([string, number]),
   handleChange: func.isRequired,
   step: number,
   precision: number,
+  pattern: string,
 };
 
 export default NumberField;
