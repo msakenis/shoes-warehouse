@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   Heading,
   Input,
@@ -72,7 +72,7 @@ function EditProduct() {
   const [productStatus, setProductStatus] = useState(String(product.active));
   const currentProducts = JSON.parse(localStorage.getItem('products'));
   const toast = useToast();
-
+  const history = useHistory();
   return (
     <>
       <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
@@ -173,6 +173,14 @@ function EditProduct() {
 
           <Button type="submit" mt="8">
             Save
+          </Button>
+          <Button
+            type="button"
+            onClick={() => history.push('/products')}
+            mt="8"
+            ml="4"
+          >
+            Back
           </Button>
         </form>
       </Stack>
