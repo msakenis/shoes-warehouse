@@ -71,7 +71,6 @@ function ViewProducts() {
           {data &&
             data.map((row, index) => (
               // changes color to ligher to look like disabled if not active
-
               <Tr
                 key={index}
                 color={!(String(row.active) === 'true') && 'gray.200'}
@@ -85,7 +84,7 @@ function ViewProducts() {
                 <Td>
                   <Checkbox
                     colorScheme="green"
-                    isChecked={String(row.active) === 'true'} // chakra radio returns booleans as strings so changing it to boolean type
+                    isChecked={String(row.active) === 'true'} // chakra radio accepts booleans as strings so changing it to boolean type
                     onChange={() =>
                       dispatch({
                         type: ACTIONS.HANDLE_CHECKBOX,
