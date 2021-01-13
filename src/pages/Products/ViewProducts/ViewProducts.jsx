@@ -9,86 +9,13 @@ import {
   Th,
   Td,
   Checkbox,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Button,
   Box,
 } from '@chakra-ui/react';
-import { ActionIconGroup } from '../../../components';
+import { ActionIconGroup, NumberField } from '../../../components';
 import ACTIONS from '../../../actions';
-
-function reducer(data, action) {
-  switch (action.type) {
-    case ACTIONS.HANDLE_CHECKBOX:
-      let newData = data.map((product) => {
-        if (product.id === action.payload.id) {
-          return { ...product, active: !product.active };
-        } else {
-          return product;
-        }
-      });
-
-      localStorage.setItem('products', JSON.stringify(newData)); // emulate db
-      return newData;
-
-    case ACTIONS.DELETE_PRODUCT:
-      let productData = data.filter(
-        (product) => product.id !== action.payload.id
-      );
-
-      localStorage.setItem('products', JSON.stringify(productData)); // emulate db
-      return productData;
-    case ACTIONS.UPDATE_PRODUCTS:
-      let updatedProducts = data.map((product) => {
-        // most iteractions with data would do in back-end. In front end usually you fetch already filtered data
-        if (action.payload.quantity[product.id]) {
-          product = {
-            ...product,
-            currentQnty:
-              (+product.currentQnty || 0) +
-                +action.payload.quantity[product.id] <
-              0
-                ? 0
-                : (+product.currentQnty || 0) +
-                  +action.payload.quantity[product.id], // if current qnty lower than 0 return 0, qnty cannot be negative
-          };
-        }
-        if (action.payload.price[product.id] >= 0) {
-          product = {
-            ...product,
-            price: action.payload.price[product.id] || 0,
-          };
-        }
-        return product;
-      });
-      localStorage.setItem('products', JSON.stringify(updatedProducts));
-      return updatedProducts;
-
-    default:
-      return data;
-  }
-}
-
-function showUpdateBtn(enteredQntyValues, enteredPriceValues, data) {
-  const qntyValueArr = Object.values(enteredQntyValues);
-  const priceValueArr = Object.values(enteredPriceValues);
-  const defaultPriceArr = Object.values(setDefaultPrices(data));
-
-  return (
-    !qntyValueArr.length === 0 || //check if no values were changed do not show the button update
-    !qntyValueArr.every((item) => item === 0) || //check if all values 0 then no need to show button either
-    !(JSON.stringify(priceValueArr) === JSON.stringify(defaultPriceArr)) // check if any changes were made to prices and show button if yes
-  );
-}
-
-function setDefaultPrices(data) {
-  const dataObj = {};
-  data.map((item) => Object.assign(dataObj, { [item.id]: item.price }));
-  return dataObj;
-}
+import { reducer } from './reducer';
+import { setDefaultPrices, showUpdateBtn } from './helperFunctions';
 
 function ViewProducts() {
   const [data, dispatch] = useReducer(
@@ -150,56 +77,36 @@ function ViewProducts() {
                 <Td>{row.currentQnty || 0}</Td>
                 <Td>
                   {
-                    <NumberInput
-                      minW="100px"
-                      inputMode="numeric"
-                      max="9999999"
-                      min="-9999999"
-                      keepWithinRange={false}
-                      clampValueOnBlur={false}
+                    <NumberField
+                      max={9999999}
+                      min={-9999999}
                       isDisabled={!(String(row.active) === 'true')}
                       value={enteredQntyValues[row.id] || ''}
-                      onChange={(value) => {
+                      handleChange={(value) => {
                         setEnteredQntyValues({
                           ...enteredQntyValues,
                           [row.id]: +value,
                         });
                       }}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                    />
                   }
                 </Td>
                 <Td>
                   {
-                    <NumberInput
-                      minW="100px"
+                    <NumberField
                       step={0.05}
                       precision={2}
-                      inputMode="numeric"
-                      keepWithinRange={false}
-                      clampValueOnBlur={false}
-                      max="9999999"
-                      min="0"
+                      max={9999999}
+                      min={0}
                       isDisabled={!(String(row.active) === 'true')}
                       value={enteredPriceValues[row.id] || ''}
-                      onChange={(value) => {
+                      handleChange={(value) => {
                         setEnteredPriceValues({
                           ...enteredPriceValues,
                           [row.id]: +value,
                         });
                       }}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                    />
                   }
                 </Td>
                 <Td>
