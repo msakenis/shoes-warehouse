@@ -11,7 +11,7 @@ import {
   RadioGroup,
   useToast,
 } from '@chakra-ui/react';
-
+import { NumberField } from '../../../components/';
 function createRandomEANNumber() {
   // randomly generates 13digit number
   return Math.floor(Math.random() * 1000000000000 + 1000000000000);
@@ -25,6 +25,8 @@ function addProduct(
   color,
   weight,
   productStatus,
+  initPrice,
+  initQnty,
   currentProducts,
   toast
 ) {
@@ -38,6 +40,8 @@ function addProduct(
     ean: +EANnumber,
     color,
     weight: +weight,
+    price: initPrice,
+    currentQnty: initQnty,
     active: productStatus,
   });
 
@@ -59,6 +63,8 @@ function CreateProduct() {
   const [color, setColor] = useState('');
   const [weight, setWeight] = useState(0);
   const [productStatus, setProductStatus] = useState('true');
+  const [initPrice, setInitPrice] = useState(0);
+  const [initQnty, setInitQnty] = useState(0);
   const currentProducts = JSON.parse(localStorage.getItem('products'));
   const toast = useToast();
 
@@ -78,6 +84,8 @@ function CreateProduct() {
               color,
               weight,
               productStatus,
+              initPrice,
+              initQnty,
               currentProducts,
               toast
             );
@@ -148,6 +156,35 @@ function CreateProduct() {
             </FormControl>
           </Stack>
 
+          <Stack direction="row" mt="5">
+            <FormControl id="price" isRequired>
+              <FormLabel>Price (&euro;)</FormLabel>
+              <NumberField
+                step={0.05}
+                precision={2}
+                max={9999999}
+                isDisabled={false}
+                min={0}
+                handleChange={(value) => {
+                  setInitPrice(value);
+                }}
+              />
+              <FormHelperText>e.g 100</FormHelperText>
+            </FormControl>
+            <FormControl id="quantity" isRequired>
+              <FormLabel>Quantity (pcs)</FormLabel>
+              <NumberField
+                max={9999999}
+                min={-9999999}
+                isDisabled={false}
+                pattern="^[0-9]*$"
+                handleChange={(value) => {
+                  setInitQnty(value);
+                }}
+              />
+              <FormHelperText>e.g 1</FormHelperText>
+            </FormControl>
+          </Stack>
           <RadioGroup onChange={setProductStatus} value={productStatus} mt="4">
             <Stack direction="row">
               <Radio value="true">Active</Radio>
