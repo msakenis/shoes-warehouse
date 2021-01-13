@@ -43,6 +43,10 @@ function PreviewProduct() {
             <Td>{product.color}</Td>
           </Tr>
           <Tr>
+            <Th>Current Quantity:</Th>
+            <Td>{product.currentQnty}</Td>
+          </Tr>
+          <Tr>
             <Th>Active:</Th>
             <Td>{product.active ? 'YES' : 'NO'}</Td>
           </Tr>

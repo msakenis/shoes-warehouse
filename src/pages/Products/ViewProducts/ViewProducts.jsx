@@ -9,8 +9,13 @@ import {
   Th,
   Td,
   Checkbox,
-  Input,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
   Button,
+  Box,
 } from '@chakra-ui/react';
 import { ActionIconGroup } from '../../../components';
 import ACTIONS from '../../../actions';
@@ -40,7 +45,7 @@ function reducer(data, action) {
       let updatedProducts = data.map((product) => {
         // most iteractions with data would do in back-end. In front end usually you fetch already filtered data
         if (action.payload.quantity[product.id]) {
-          return {
+          product = {
             ...product,
             currentQnty:
               (+product.currentQnty || 0) +
@@ -50,14 +55,14 @@ function reducer(data, action) {
                 : (+product.currentQnty || 0) +
                   +action.payload.quantity[product.id], // if current qnty lower than 0 return 0, qnty cannot be negative
           };
-        } else if (action.payload.price[product.id] >= 0) {
-          return {
+        }
+        if (action.payload.price[product.id] >= 0) {
+          product = {
             ...product,
             price: action.payload.price[product.id] || 0,
           };
-        } else {
-          return product;
         }
+        return product;
       });
       localStorage.setItem('products', JSON.stringify(updatedProducts));
       return updatedProducts;
@@ -66,6 +71,7 @@ function reducer(data, action) {
       return data;
   }
 }
+
 function showUpdateBtn(enteredQntyValues, enteredPriceValues, data) {
   const qntyValueArr = Object.values(enteredQntyValues);
   const priceValueArr = Object.values(enteredPriceValues);
@@ -144,32 +150,56 @@ function ViewProducts() {
                 <Td>{row.currentQnty || 0}</Td>
                 <Td>
                   {
-                    <Input
-                      type="number"
-                      minW="60px"
+                    <NumberInput
+                      minW="100px"
+                      inputMode="numeric"
+                      max="9999999"
+                      min="-9999999"
+                      keepWithinRange={false}
+                      clampValueOnBlur={false}
+                      isDisabled={!(String(row.active) === 'true')}
                       value={enteredQntyValues[row.id] || ''}
-                      onChange={(e) => {
+                      onChange={(value) => {
                         setEnteredQntyValues({
                           ...enteredQntyValues,
-                          [row.id]: +e.target.value,
+                          [row.id]: +value,
                         });
                       }}
-                    />
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
                   }
                 </Td>
                 <Td>
                   {
-                    <Input
-                      type="number"
-                      minW="60px"
+                    <NumberInput
+                      minW="100px"
+                      step={0.05}
+                      precision={2}
+                      inputMode="numeric"
+                      keepWithinRange={false}
+                      clampValueOnBlur={false}
+                      max="9999999"
+                      min="0"
+                      isDisabled={!(String(row.active) === 'true')}
                       value={enteredPriceValues[row.id] || ''}
-                      onChange={(e) => {
+                      onChange={(value) => {
                         setEnteredPriceValues({
                           ...enteredPriceValues,
-                          [row.id]: +e.target.value,
+                          [row.id]: +value,
                         });
                       }}
-                    />
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
                   }
                 </Td>
                 <Td>
@@ -211,7 +241,9 @@ function ViewProducts() {
         </Tbody>
       </Table>
       {showUpdateBtn(enteredQntyValues, enteredPriceValues, data) && (
-        <Button type="submit">Update</Button>
+        <Box mt="4">
+          <Button type="submit">Update</Button>
+        </Box>
       )}
     </form>
   );
