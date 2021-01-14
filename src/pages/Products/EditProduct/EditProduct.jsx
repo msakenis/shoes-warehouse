@@ -12,43 +12,14 @@ import {
   RadioGroup,
   useToast,
 } from '@chakra-ui/react';
+import { getChosenProduct } from './helperFunctions';
 
-function getChosenProduct(id) {
-  const products = JSON.parse(localStorage.getItem('products')); // local storage just to emulate db
-
-  const product = products.filter((product) => product.id === +id)[0]; // this filter just to emulate db, ussually you fetch one product only. Back-End must do the most of the job
-
-  return product;
-}
-function editProduct(
-  e,
-  id,
-  name,
-  type,
-  EANnumber,
-  color,
-  weight,
-  productStatus,
-  currentProducts,
-  toast
-) {
+function editProduct(e, id, fieldValues, currentProducts, toast) {
   e.preventDefault();
 
-  let updatedProducts = currentProducts.map((product) => {
-    if (product.id === id) {
-      return {
-        ...product,
-        name: name,
-        type: type,
-        ean: +EANnumber,
-        color: color,
-        weight: +weight,
-        active: productStatus,
-      };
-    } else {
-      return product;
-    }
-  });
+  let updatedProducts = currentProducts.map((product) =>
+    product.id === id ? { ...fieldValues, id } : product
+  );
 
   localStorage.setItem('products', JSON.stringify(updatedProducts)); // rewrites fake db to new products
   toast({
@@ -64,12 +35,8 @@ function editProduct(
 function EditProduct() {
   const { id } = useParams();
   const product = getChosenProduct(id);
-  const [name, setName] = useState(product.name);
-  const [type, setType] = useState(product.type);
-  const [EANnumber, setEANnumber] = useState(product.ean);
-  const [color, setColor] = useState(product.color);
-  const [weight, setWeight] = useState(product.weight);
-  const [productStatus, setProductStatus] = useState(String(product.active));
+  const [fieldValues, setFieldValues] = useState(product);
+
   const currentProducts = JSON.parse(localStorage.getItem('products'));
   const toast = useToast();
   const history = useHistory();
@@ -81,18 +48,7 @@ function EditProduct() {
       <Stack maxW="800px" pt="10">
         <form
           onSubmit={(e) => {
-            editProduct(
-              e,
-              product.id,
-              name,
-              type,
-              EANnumber,
-              color,
-              weight,
-              productStatus,
-              currentProducts,
-              toast
-            );
+            editProduct(e, product.id, fieldValues, currentProducts, toast);
           }}
         >
           <Stack direction="row">
@@ -100,8 +56,10 @@ function EditProduct() {
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, name: e.target.value })
+                }
+                value={fieldValues.name}
                 placeholder="Name"
                 maxLength="50"
               />
@@ -112,8 +70,10 @@ function EditProduct() {
               <FormLabel>Type</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setType(e.target.value)}
-                value={type}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, type: e.target.value })
+                }
+                value={fieldValues.type}
                 placeholder="Type"
                 maxLength="50"
               />
@@ -126,8 +86,10 @@ function EditProduct() {
               <FormLabel>EAN Code</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setEANnumber(e.target.value)}
-                value={EANnumber}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, ean: +e.target.value })
+                }
+                value={fieldValues.ean}
                 placeholder="Color"
                 minLength="13"
                 maxLength="13"
@@ -142,8 +104,10 @@ function EditProduct() {
               <FormLabel>Color</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setColor(e.target.value)}
-                value={color}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, color: e.target.value })
+                }
+                value={fieldValues.color}
                 placeholder="Color"
                 maxLength="50"
               />
@@ -154,8 +118,10 @@ function EditProduct() {
               <FormLabel>Weight (g)</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setWeight(e.target.value)}
-                value={weight}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, weight: +e.target.value })
+                }
+                value={fieldValues.weight}
                 placeholder="Grams"
                 pattern="^[0-9]*$"
                 maxLength="7"
@@ -164,7 +130,13 @@ function EditProduct() {
             </FormControl>
           </Stack>
 
-          <RadioGroup onChange={setProductStatus} value={productStatus} mt="4">
+          <RadioGroup
+            onChange={(value) =>
+              setFieldValues({ ...fieldValues, active: value })
+            }
+            value={fieldValues.active}
+            mt="4"
+          >
             <Stack direction="row">
               <Radio value="true">Active</Radio>
               <Radio value="false">Inactive</Radio>
