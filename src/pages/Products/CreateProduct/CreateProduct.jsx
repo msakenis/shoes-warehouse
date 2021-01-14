@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Heading,
   Input,
@@ -12,10 +13,16 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { NumberField } from '../../../components/';
-import { generateUniqueId, createRandomEANNumber } from './helperFunctions';
+import {
+  generateUniqueId,
+  createRandomEANNumber,
+  handleProductHistory,
+} from './helperFunctions';
 
-function addProduct(e, fieldValues, currentProducts, toast) {
+function addProduct(e, fieldValues, products, toast) {
   e.preventDefault();
+
+  const currentProducts = products || [];
   const id = generateUniqueId(currentProducts);
 
   currentProducts.push({
@@ -30,6 +37,8 @@ function addProduct(e, fieldValues, currentProducts, toast) {
 
   localStorage.setItem('products', JSON.stringify(currentProducts)); // rewrites fake db to new products
 
+  handleProductHistory(id, fieldValues);
+
   toast({
     title: 'Product created successfully!',
 
@@ -41,7 +50,7 @@ function addProduct(e, fieldValues, currentProducts, toast) {
 }
 
 function CreateProduct() {
-  const [fieldValues, setFieldValues] = useState({
+  const initFieldValues = {
     name: '',
     type: '',
     ean: createRandomEANNumber(),
@@ -50,8 +59,8 @@ function CreateProduct() {
     active: 'true',
     price: 0,
     currentQnty: 0,
-  });
-
+  };
+  const [fieldValues, setFieldValues] = useState(initFieldValues);
   const currentProducts = JSON.parse(localStorage.getItem('products'));
   const toast = useToast();
 
@@ -64,6 +73,7 @@ function CreateProduct() {
         <form
           onSubmit={(e) => {
             addProduct(e, fieldValues, currentProducts, toast);
+            setFieldValues(initFieldValues);
           }}
         >
           <Stack direction="row">

@@ -9,3 +9,19 @@ export function generateUniqueId(products) {
     return 1;
   }
 }
+
+export function handleProductHistory(id, fieldValues) {
+  const thisProductHistory = {
+    // sets initial history of product
+    productId: id,
+    priceHistory: [[Date.now(), +fieldValues.price]],
+    quantityHistory: [[Date.now(), +fieldValues.currentQnty]],
+  };
+
+  const productsHistory =
+    JSON.parse(localStorage.getItem('productsHistory')) || [];
+
+  productsHistory.push(thisProductHistory);
+
+  localStorage.setItem('productsHistory', JSON.stringify(productsHistory));
+}
