@@ -12,40 +12,16 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { NumberField } from '../../../components/';
-function createRandomEANNumber() {
-  // randomly generates 13digit number
-  return Math.floor(Math.random() * 1000000000000 + 1000000000000);
-}
+import { generateUniqueId, createRandomEANNumber } from './helperFunctions';
 
-function addProduct(
-  e,
-  name,
-  type,
-  EANnumber,
-  color,
-  weight,
-  productStatus,
-  initPrice,
-  initQnty,
-  currentProducts,
-  toast
-) {
+function addProduct(e, fieldValues, currentProducts, toast) {
   e.preventDefault();
-  const id = currentProducts.sort((a, b) => a.id - b.id).slice(-1)[0].id + 1; //sorts by id to get highest id number and +1 to have unique id
+  const id = generateUniqueId(currentProducts);
 
-  currentProducts.push({
-    id,
-    name,
-    type,
-    ean: +EANnumber,
-    color,
-    weight: +weight,
-    price: initPrice,
-    currentQnty: initQnty,
-    active: productStatus,
-  });
+  currentProducts.push({ ...fieldValues, id });
 
   localStorage.setItem('products', JSON.stringify(currentProducts)); // rewrites fake db to new products
+
   toast({
     title: 'Product created successfully!',
 
@@ -57,14 +33,17 @@ function addProduct(
 }
 
 function CreateProduct() {
-  const [name, setName] = useState('');
-  const [type, setType] = useState('');
-  const [EANnumber, setEANnumber] = useState(createRandomEANNumber());
-  const [color, setColor] = useState('');
-  const [weight, setWeight] = useState(0);
-  const [productStatus, setProductStatus] = useState('true');
-  const [initPrice, setInitPrice] = useState(0);
-  const [initQnty, setInitQnty] = useState(0);
+  const [fieldValues, setFieldValues] = useState({
+    name: '',
+    type: '',
+    ean: createRandomEANNumber(),
+    color: '',
+    weight: 0,
+    active: 'true',
+    price: 0,
+    currentQnty: 0,
+  });
+
   const currentProducts = JSON.parse(localStorage.getItem('products'));
   const toast = useToast();
 
@@ -76,19 +55,7 @@ function CreateProduct() {
       <Stack maxW="800px" pt="10">
         <form
           onSubmit={(e) => {
-            addProduct(
-              e,
-              name,
-              type,
-              EANnumber,
-              color,
-              weight,
-              productStatus,
-              initPrice,
-              initQnty,
-              currentProducts,
-              toast
-            );
+            addProduct(e, fieldValues, currentProducts, toast);
           }}
         >
           <Stack direction="row">
@@ -96,7 +63,9 @@ function CreateProduct() {
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, name: e.target.value })
+                }
                 placeholder="Name"
                 maxLength="50"
               />
@@ -107,7 +76,9 @@ function CreateProduct() {
               <FormLabel>Type</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setType(e.target.value)}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, type: e.target.value })
+                }
                 placeholder="Type"
                 maxLength="50"
               />
@@ -120,8 +91,10 @@ function CreateProduct() {
               <FormLabel>EAN Code</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setEANnumber(e.target.value)}
-                value={EANnumber}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, ean: +e.target.value })
+                }
+                value={fieldValues.ean}
                 placeholder="Color"
                 minLength="13"
                 maxLength="13"
@@ -136,7 +109,9 @@ function CreateProduct() {
               <FormLabel>Color</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setColor(e.target.value)}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, color: e.target.value })
+                }
                 placeholder="Color"
                 maxLength="50"
               />
@@ -147,7 +122,9 @@ function CreateProduct() {
               <FormLabel>Weight (g)</FormLabel>
               <Input
                 type="text"
-                onChange={(e) => setWeight(e.target.value)}
+                onChange={(e) =>
+                  setFieldValues({ ...fieldValues, weight: +e.target.value })
+                }
                 placeholder="Grams"
                 pattern="^[0-9]*$"
                 maxLength="7"
@@ -163,10 +140,14 @@ function CreateProduct() {
                 step={0.05}
                 precision={2}
                 max={9999999}
+                value={fieldValues.price}
                 isDisabled={false}
                 min={0}
                 handleChange={(value) => {
-                  setInitPrice(value);
+                  setFieldValues({
+                    ...fieldValues,
+                    price: value.charAt(1) === '0' ? 0 : value,
+                  }); // prevent "0000"
                 }}
               />
               <FormHelperText>e.g 100</FormHelperText>
@@ -176,16 +157,29 @@ function CreateProduct() {
               <NumberField
                 max={9999999}
                 min={-9999999}
+                value={fieldValues.currentQnty}
                 isDisabled={false}
                 pattern="^[0-9]*$"
                 handleChange={(value) => {
-                  setInitQnty(value);
+                  setFieldValues({
+                    ...fieldValues,
+                    currentQnty: value.startsWith(0) ? 0 : value, // prevent "0000"
+                  });
                 }}
               />
               <FormHelperText>e.g 1</FormHelperText>
             </FormControl>
           </Stack>
-          <RadioGroup onChange={setProductStatus} value={productStatus} mt="4">
+          <RadioGroup
+            onChange={(value) =>
+              setFieldValues({
+                ...fieldValues,
+                active: value, // prevent "0000"
+              })
+            }
+            value={fieldValues.active}
+            mt="4"
+          >
             <Stack direction="row">
               <Radio value="true">Active</Radio>
               <Radio value="false">Inactive</Radio>
