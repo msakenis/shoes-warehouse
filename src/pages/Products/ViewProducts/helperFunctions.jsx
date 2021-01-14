@@ -4,6 +4,7 @@ export function showUpdateBtn(enteredQntyValues, enteredPriceValues, data) {
   const defaultPriceArr = Object.values(setDefaultPrices(data));
 
   return (
+    !(data.length === 0) && // if no data do not show update button
     (!qntyValueArr.length === 0 || //check if no values were changed do not show the button update
       !qntyValueArr.every((item) => item === 0) || //check if all values 0 then no need to show button either
       !(JSON.stringify(priceValueArr) === JSON.stringify(defaultPriceArr))) && // check if any changes were made to prices and show button if yes
