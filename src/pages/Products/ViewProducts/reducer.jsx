@@ -1,5 +1,5 @@
 import ACTIONS from '../../../actions';
-import { setDefaultPrices } from './helperFunctions';
+import { setDefaultPrices, handleDeleteHistory } from './helperFunctions';
 
 export function reducer(data, action) {
   switch (action.type) {
@@ -16,15 +16,20 @@ export function reducer(data, action) {
       return newData;
 
     case ACTIONS.DELETE_PRODUCT:
-      let productData = data.filter(
+      const productData = data.filter(
         (product) => product.id !== action.payload.id
       );
       action.payload.setEnteredPriceValues(setDefaultPrices(productData)); // reset entered prices array to not show update btn after delete of product.
 
       localStorage.setItem('products', JSON.stringify(productData)); // emulate db
+
+      // takes products history data and deletes the product which was deleted from the list
+      // this is back-end function
+      handleDeleteHistory(action);
+
       return productData;
     case ACTIONS.UPDATE_PRODUCTS:
-      let updatedProducts = data.map((product) => {
+      const updatedProducts = data.map((product) => {
         // most iteractions with data would do in back-end. In front end usually you fetch already filtered data
         if (action.payload.quantity[product.id]) {
           product = {
