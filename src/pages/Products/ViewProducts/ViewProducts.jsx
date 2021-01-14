@@ -32,6 +32,7 @@ function ViewProducts() {
   );
   const history = useHistory();
   const toast = useToast();
+  const productsHistory = JSON.parse(localStorage.getItem('productsHistory'));
 
   return (
     <form
@@ -43,7 +44,8 @@ function ViewProducts() {
           payload: {
             quantity: enteredQntyValues,
             price: enteredPriceValues,
-            toast: toast,
+            productsHistory,
+            toast,
           },
         });
         setEnteredQntyValues({});
@@ -52,7 +54,7 @@ function ViewProducts() {
       <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
         Products
       </Heading>
-      {data.length !== 0 ? (
+      {data && data.length !== 0 ? (
         <Table variant="simple" mt="10">
           <Thead>
             <Tr>

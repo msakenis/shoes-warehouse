@@ -29,8 +29,11 @@ export function reducer(data, action) {
 
       return productData;
     case ACTIONS.UPDATE_PRODUCTS:
+      let priceHistoryArr = [];
+      let updatedProductHistory = action.payload.productsHistory;
       const updatedProducts = data.map((product) => {
         // most iteractions with data would do in back-end. In front end usually you fetch already filtered data
+
         if (action.payload.quantity[product.id]) {
           product = {
             ...product,
@@ -43,15 +46,30 @@ export function reducer(data, action) {
                   +action.payload.quantity[product.id],
           };
         }
-        if (action.payload.price[product.id] >= 0) {
+
+        if (+action.payload.price[product.id] !== +product.price) {
           product = {
             ...product,
             price: +action.payload.price[product.id] || 0,
           };
+          updatedProductHistory = action.payload.productsHistory.map((item) => {
+            if (item.productId === product.id) {
+              priceHistoryArr = item.priceHistory;
+              priceHistoryArr.push([
+                Date.now(),
+                +action.payload.price[product.id],
+              ]);
+            }
+            return item;
+          });
         }
         return product;
       });
       localStorage.setItem('products', JSON.stringify(updatedProducts));
+      localStorage.setItem(
+        'productsHistory',
+        JSON.stringify(updatedProductHistory)
+      );
       action.payload.toast({
         title: 'Updated successfully!',
         status: 'success',
