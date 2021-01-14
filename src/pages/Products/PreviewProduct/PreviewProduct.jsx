@@ -29,7 +29,7 @@ function PreviewProduct() {
           </Tr>
           <Tr>
             <Th>Weigth:</Th>
-            <Td>{product.weigth / 1000} kg</Td>
+            <Td>{product.weight / 1000} kg</Td>
           </Tr>
           <Tr>
             <Th>Color:</Th>
