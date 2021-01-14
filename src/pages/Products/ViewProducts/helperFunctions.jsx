@@ -1,7 +1,7 @@
 export function showUpdateBtn(enteredQntyValues, enteredPriceValues, data) {
-  const qntyValueArr = Object.values(enteredQntyValues);
-  const priceValueArr = Object.values(enteredPriceValues);
-  const defaultPriceArr = Object.values(setDefaultPrices(data));
+  const qntyValueArr = Object.values(enteredQntyValues).map(Number);
+  const priceValueArr = Object.values(enteredPriceValues).map(Number);
+  const defaultPriceArr = Object.values(setDefaultPrices(data)).map(Number);
 
   return (
     !(data.length === 0) && // if no data do not show update button

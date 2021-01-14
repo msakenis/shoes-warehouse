@@ -18,7 +18,17 @@ function editProduct(e, id, fieldValues, currentProducts, toast) {
   e.preventDefault();
 
   let updatedProducts = currentProducts.map((product) =>
-    product.id === id ? { ...fieldValues, id } : product
+    product.id === id
+      ? {
+          ...fieldValues,
+          id,
+          //chakra numberInput returns string on OnChange event https://github.com/chakra-ui/chakra-ui/issues/244
+          //converting to number to prevent futher unexpected behaviour
+          currentQnty: +fieldValues.currentQnty,
+          weight: +fieldValues.weight,
+          price: +fieldValues.price,
+        }
+      : product
   );
 
   localStorage.setItem('products', JSON.stringify(updatedProducts)); // rewrites fake db to new products

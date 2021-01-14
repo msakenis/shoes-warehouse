@@ -18,7 +18,15 @@ function addProduct(e, fieldValues, currentProducts, toast) {
   e.preventDefault();
   const id = generateUniqueId(currentProducts);
 
-  currentProducts.push({ ...fieldValues, id });
+  currentProducts.push({
+    ...fieldValues,
+    id,
+    //chakra numberInput returns string on OnChange event https://github.com/chakra-ui/chakra-ui/issues/244
+    //converting to number to prevent futher unexpected behaviour
+    currentQnty: +fieldValues.currentQnty,
+    weight: +fieldValues.weight,
+    price: +fieldValues.price,
+  });
 
   localStorage.setItem('products', JSON.stringify(currentProducts)); // rewrites fake db to new products
 
@@ -120,14 +128,18 @@ function CreateProduct() {
 
             <FormControl id="weight" isRequired>
               <FormLabel>Weight (g)</FormLabel>
-              <Input
-                type="text"
-                onChange={(e) =>
-                  setFieldValues({ ...fieldValues, weight: +e.target.value })
-                }
-                placeholder="Grams"
+              <NumberField
+                max={9999999}
+                min={0}
+                value={fieldValues.weight}
+                isDisabled={false}
                 pattern="^[0-9]*$"
-                maxLength="7"
+                handleChange={(value) => {
+                  setFieldValues({
+                    ...fieldValues,
+                    weight: value.startsWith(0) ? 0 : value, // prevent "0000"
+                  });
+                }}
               />
               <FormHelperText>weight in grams. E.g 1000</FormHelperText>
             </FormControl>
@@ -146,8 +158,11 @@ function CreateProduct() {
                 handleChange={(value) => {
                   setFieldValues({
                     ...fieldValues,
-                    price: value.charAt(1) === '0' ? 0 : value,
-                  }); // prevent "0000"
+                    price:
+                      value.startsWith(0) && value.charAt(1) !== '.'
+                        ? 0
+                        : value,
+                  }); // prevent "0000" and if first char is 0 than second char should be "."
                 }}
               />
               <FormHelperText>e.g 100</FormHelperText>
@@ -156,7 +171,7 @@ function CreateProduct() {
               <FormLabel>Quantity (pcs)</FormLabel>
               <NumberField
                 max={9999999}
-                min={-9999999}
+                min={0}
                 value={fieldValues.currentQnty}
                 isDisabled={false}
                 pattern="^[0-9]*$"
