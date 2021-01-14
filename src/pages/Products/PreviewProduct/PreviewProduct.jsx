@@ -1,7 +1,16 @@
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Heading, Table, Tbody, Tr, Th, Td, Button } from '@chakra-ui/react';
+import {
+  Heading,
+  Button,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from '@chakra-ui/react';
 import { getChosenProduct } from '../../../helpers/sharedHelperFunctions';
+import { ProductDetailsTable } from '../../../components';
 
 function PreviewProduct() {
   const { id } = useParams(); // take router param as product id
@@ -10,45 +19,35 @@ function PreviewProduct() {
 
   return (
     <div>
-      <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
+      <Heading
+        as="h2"
+        size="lg"
+        color="gray.500"
+        fontWeight="500"
+        pt="10"
+        pb="10"
+      >
         {product.name} {product.type}
       </Heading>
-      <Table variant="simple" mt="10" width="600px">
-        <Tbody>
-          <Tr>
-            <Th>Name:</Th>
-            <Td>{product.name}</Td>
-          </Tr>
-          <Tr>
-            <Th>EAN Code:</Th>
-            <Td>{product.ean}</Td>
-          </Tr>
-          <Tr>
-            <Th>Type:</Th>
-            <Td>{product.type}</Td>
-          </Tr>
-          <Tr>
-            <Th>Weigth:</Th>
-            <Td>{product.weight / 1000} kg</Td>
-          </Tr>
-          <Tr>
-            <Th>Color:</Th>
-            <Td>{product.color}</Td>
-          </Tr>
-          <Tr>
-            <Th>Current Quantity(pcs):</Th>
-            <Td>{product.currentQnty}</Td>
-          </Tr>
-          <Tr>
-            <Th>Current Price:</Th>
-            <Td>{product.price} &euro;</Td>
-          </Tr>
-          <Tr>
-            <Th>Active:</Th>
-            <Td>{product.active ? 'YES' : 'NO'}</Td>
-          </Tr>
-        </Tbody>
-      </Table>
+      <Tabs variant="enclosed">
+        <TabList>
+          <Tab>Product Details</Tab>
+          <Tab>Price History</Tab>
+          <Tab>Quantity History</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <ProductDetailsTable product={product} />
+          </TabPanel>
+          <TabPanel>
+            <p>Price History</p>
+          </TabPanel>
+          <TabPanel>
+            <p>Quantity History</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+
       <Button mt="10" onClick={() => history.push('/products')}>
         Back
       </Button>
