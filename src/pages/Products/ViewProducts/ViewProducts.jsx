@@ -61,7 +61,7 @@ function ViewProducts() {
             <Th>Weight</Th>
             <Th>Color</Th>
             <Th>Quantity</Th>
-            <Th>Change Quantity</Th>
+            <Th>Change Quantity(+,-)</Th>
             <Th>Price (&euro;)</Th>
             <Th>Active</Th>
             <Th>Actions</Th>
