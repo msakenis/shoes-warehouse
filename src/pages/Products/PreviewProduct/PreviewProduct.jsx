@@ -1,14 +1,7 @@
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Heading, Table, Tbody, Tr, Th, Td, Button } from '@chakra-ui/react';
-
-function getChosenProduct(id) {
-  const products = JSON.parse(localStorage.getItem('products')); // local storage just to emulate db
-
-  const product = products.filter((product) => product.id === +id)[0]; // this filter just to emulate db, ussually you fetch one product only. Back-End must do the most of the job
-
-  return product;
-}
+import { getChosenProduct } from '../../../helpers/sharedHelperFunctions';
 
 function PreviewProduct() {
   const { id } = useParams(); // take router param as product id

@@ -12,7 +12,7 @@ import {
   RadioGroup,
   useToast,
 } from '@chakra-ui/react';
-import { getChosenProduct } from './helperFunctions';
+import { getChosenProduct } from '../../../helpers/sharedHelperFunctions';
 
 function editProduct(e, id, fieldValues, currentProducts, toast) {
   e.preventDefault();
