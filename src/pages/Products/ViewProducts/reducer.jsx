@@ -1,4 +1,5 @@
 import ACTIONS from '../../../actions';
+import { setDefaultPrices } from './helperFunctions';
 
 export function reducer(data, action) {
   switch (action.type) {
@@ -18,6 +19,7 @@ export function reducer(data, action) {
       let productData = data.filter(
         (product) => product.id !== action.payload.id
       );
+      action.payload.setEnteredPriceValues(setDefaultPrices(productData)); // reset entered prices array to not show update btn after delete of product.
 
       localStorage.setItem('products', JSON.stringify(productData)); // emulate db
       return productData;
@@ -39,7 +41,7 @@ export function reducer(data, action) {
         if (action.payload.price[product.id] >= 0) {
           product = {
             ...product,
-            price: action.payload.price[product.id] || 0,
+            price: +action.payload.price[product.id] || 0,
           };
         }
         return product;
@@ -52,6 +54,7 @@ export function reducer(data, action) {
         isClosable: true,
         position: 'top',
       });
+
       return updatedProducts;
 
     default:

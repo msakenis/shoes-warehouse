@@ -146,7 +146,7 @@ function ViewProducts() {
                         // activates reducer hook with delete action, which filters and return data
                         dispatch({
                           type: ACTIONS.DELETE_PRODUCT,
-                          payload: { id: row.id },
+                          payload: { id: row.id, setEnteredPriceValues },
                         })
                       }
                       isDisabled={!(String(row.active) === 'true')} // disables btns if not active
