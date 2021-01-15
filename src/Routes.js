@@ -26,7 +26,7 @@ function Routes() {
     <Router>
       <NavBar />
       <Suspense fallback={<Spinner size="xl" />}>
-        <Container maxW="6xl">
+        <Container maxW="7xl">
           <Switch>
             <Route exact path="/">
               <Redirect to="/products" />

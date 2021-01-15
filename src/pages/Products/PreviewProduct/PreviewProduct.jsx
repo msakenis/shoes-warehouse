@@ -32,6 +32,7 @@ function PreviewProduct() {
             size="lg"
             color="gray.500"
             fontWeight="500"
+            textAlign={['center', 'center', 'left']}
             pt="10"
             pb="10"
           >
@@ -68,7 +69,11 @@ function PreviewProduct() {
             </TabPanels>
           </Tabs>
 
-          <Button mt="10" onClick={() => history.push('/products')}>
+          <Button
+            mt="10"
+            w={['100%', '30%', '20%']}
+            onClick={() => history.push('/products')}
+          >
             Back
           </Button>
         </>

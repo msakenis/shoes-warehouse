@@ -8,9 +8,9 @@ function NavBar() {
   return (
     <Box borderBottom="2px" borderColor="gray.200">
       <Stack
-        maxW="6xl"
-        direction="row"
-        justify="space-between"
+        maxW="7xl"
+        direction={['column', 'column', 'row']}
+        justify={'space-between'}
         align="center"
         m="auto"
       >
@@ -22,11 +22,21 @@ function NavBar() {
           cursor="pointer"
           onClick={() => history.push('/products')}
         />
-        <Stack direction="row" color="gray.500">
-          <Link as={ReactLink} mr="4" to="/products">
+        <Stack direction="row" p="4" color="gray.500">
+          <Link
+            as={ReactLink}
+            mr={['4', '4', '2']}
+            ml={['4', '4', '2']}
+            fontSize={['xl', 'xl', 'lg']}
+            to="/products"
+          >
             Products
           </Link>
-          <Link as={ReactLink} to="/products/create">
+          <Link
+            as={ReactLink}
+            fontSize={['xl', 'xl', 'lg']}
+            to="/products/create"
+          >
             Create Product
           </Link>
         </Stack>

@@ -51,7 +51,6 @@ function EditProduct() {
   const history = useHistory();
   return (
     <>
-      {' '}
       {
         product ? (
           <>
@@ -61,6 +60,7 @@ function EditProduct() {
               size="lg"
               color="gray.500"
               fontWeight="500"
+              textAlign={['center', 'center', 'left']}
               pt="10"
             >
               Edit {product.name} {product.type}
@@ -77,7 +77,7 @@ function EditProduct() {
                   );
                 }}
               >
-                <Stack direction="row">
+                <Stack direction={['column', 'row']}>
                   <FormControl id="name" isRequired>
                     <FormLabel>Name</FormLabel>
                     <Input
@@ -107,7 +107,7 @@ function EditProduct() {
                   </FormControl>
                 </Stack>
 
-                <Stack direction="row" mt="5">
+                <Stack direction={['column', 'row']} mt="5">
                   <FormControl id="ean" isRequired>
                     <FormLabel>EAN Code</FormLabel>
                     <Input
@@ -169,20 +169,21 @@ function EditProduct() {
                   value={fieldValues.active}
                   mt="4"
                 >
-                  <Stack direction="row">
+                  <Stack direction={['column', 'row']}>
                     <Radio value="true">Active</Radio>
                     <Radio value="false">Inactive</Radio>
                   </Stack>
                 </RadioGroup>
 
-                <Button type="submit" mt="8">
+                <Button type="submit" w={['100%', '30%', '20%']} mt="8">
                   Save
                 </Button>
                 <Button
                   type="button"
                   onClick={() => history.push('/products')}
-                  mt="8"
-                  ml="4"
+                  mt={['2', '8']}
+                  ml={['0', '4']}
+                  w={['100%', '30%', '20%']}
                 >
                   Back
                 </Button>

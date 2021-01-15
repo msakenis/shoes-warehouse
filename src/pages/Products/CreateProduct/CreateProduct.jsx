@@ -69,7 +69,14 @@ function CreateProduct() {
 
   return (
     <>
-      <Heading as="h2" size="lg" color="gray.500" fontWeight="500" pt="10">
+      <Heading
+        as="h2"
+        textAlign={['center', 'center', 'left']}
+        size="lg"
+        color="gray.500"
+        fontWeight="500"
+        pt="10"
+      >
         Create Product
       </Heading>
       <Stack maxW="800px" pt="10">
@@ -78,7 +85,7 @@ function CreateProduct() {
             addProduct(e, fieldValues, currentProducts, toast, history);
           }}
         >
-          <Stack direction="row">
+          <Stack direction={['column', 'row']}>
             <FormControl id="name" isRequired>
               <FormLabel>Name</FormLabel>
               <Input
@@ -106,7 +113,7 @@ function CreateProduct() {
             </FormControl>
           </Stack>
 
-          <Stack direction="row" mt="5">
+          <Stack direction={['column', 'row']} mt="5">
             <FormControl id="ean" isRequired>
               <FormLabel>EAN Code</FormLabel>
               <Input
@@ -157,7 +164,7 @@ function CreateProduct() {
             </FormControl>
           </Stack>
 
-          <Stack direction="row" mt="5">
+          <Stack direction={['column', 'row']} mt="5">
             <FormControl id="price" isRequired>
               <FormLabel>Price (&euro;)</FormLabel>
               <NumberField
@@ -207,13 +214,13 @@ function CreateProduct() {
             value={fieldValues.active}
             mt="4"
           >
-            <Stack direction="row">
+            <Stack direction={['column', 'row']}>
               <Radio value="true">Active</Radio>
               <Radio value="false">Inactive</Radio>
             </Stack>
           </RadioGroup>
 
-          <Button type="submit" mt="8">
+          <Button type="submit" w={['100%', '30%', '20%']} mt="8">
             Create
           </Button>
         </form>

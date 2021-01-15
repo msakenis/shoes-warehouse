@@ -4,7 +4,7 @@ import { object } from 'prop-types';
 
 function ProductDetailsTable({ product }) {
   return (
-    <Table variant="simple" mt="10" width="600px">
+    <Table variant="simple" mt="10" w={['100%', '100%', '600px']}>
       <Tbody>
         <Tr>
           <Th>Name:</Th>
