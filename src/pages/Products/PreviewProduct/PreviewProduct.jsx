@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Redirect } from 'react-router-dom';
 import {
   Heading,
   Button,
@@ -24,52 +24,58 @@ function PreviewProduct() {
   const productHistory = getChosenProduct(id, productsHistory);
 
   return (
-    <div>
-      <Heading
-        as="h2"
-        size="lg"
-        color="gray.500"
-        fontWeight="500"
-        pt="10"
-        pb="10"
-      >
-        {product.name} {product.type}
-      </Heading>
-      <Tabs variant="enclosed">
-        <TabList>
-          <Tab>Product Details</Tab>
-          <Tab>Price History</Tab>
-          <Tab>Quantity History</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <ProductDetailsTable product={product} />
-          </TabPanel>
-          <TabPanel>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={priceHistoryOptions(
-                productHistory.priceHistory,
-                product.name
-              )}
-            />
-          </TabPanel>
-          <TabPanel>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={quantityHistoryOptions(
-                productHistory.quantityHistory,
-                product.name
-              )}
-            />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+    <>
+      {product ? (
+        <>
+          <Heading
+            as="h2"
+            size="lg"
+            color="gray.500"
+            fontWeight="500"
+            pt="10"
+            pb="10"
+          >
+            {product.name} {product.type}
+          </Heading>
+          <Tabs variant="enclosed">
+            <TabList>
+              <Tab>Product Details</Tab>
+              <Tab>Price History</Tab>
+              <Tab>Quantity History</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <ProductDetailsTable product={product} />
+              </TabPanel>
+              <TabPanel>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={priceHistoryOptions(
+                    productHistory.priceHistory,
+                    product.name
+                  )}
+                />
+              </TabPanel>
+              <TabPanel>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={quantityHistoryOptions(
+                    productHistory.quantityHistory,
+                    product.name
+                  )}
+                />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
 
-      <Button mt="10" onClick={() => history.push('/products')}>
-        Back
-      </Button>
-    </div>
+          <Button mt="10" onClick={() => history.push('/products')}>
+            Back
+          </Button>
+        </>
+      ) : (
+        <Redirect to="/products" /> // if manually tries to enter /products/1 and no such product, will be redirected to main page
+      )}
+    </>
   );
 }
 
