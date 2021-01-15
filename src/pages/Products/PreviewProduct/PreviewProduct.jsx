@@ -11,11 +11,17 @@ import {
 } from '@chakra-ui/react';
 import { getChosenProduct } from '../../../helpers/sharedHelperFunctions';
 import { ProductDetailsTable } from '../../../components';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { priceHistoryOptions, quantityHistoryOptions } from './ChartOptions';
 
 function PreviewProduct() {
   const { id } = useParams(); // take router param as product id
-  const product = getChosenProduct(id); // func which gets the product from all products in fake DB
+  const products = JSON.parse(localStorage.getItem('products')); // local storage just to emulate db
+  const product = getChosenProduct(id, products); // func which gets the product from all products in fake DB
   const history = useHistory();
+  const productsHistory = JSON.parse(localStorage.getItem('productsHistory'));
+  const productHistory = getChosenProduct(id, productsHistory);
 
   return (
     <div>
@@ -40,10 +46,22 @@ function PreviewProduct() {
             <ProductDetailsTable product={product} />
           </TabPanel>
           <TabPanel>
-            <p>Price History</p>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={priceHistoryOptions(
+                productHistory.priceHistory,
+                product.name
+              )}
+            />
           </TabPanel>
           <TabPanel>
-            <p>Quantity History</p>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={quantityHistoryOptions(
+                productHistory.quantityHistory,
+                product.name
+              )}
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>
