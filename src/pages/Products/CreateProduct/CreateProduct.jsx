@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useHistory } from 'react-router-dom';
 import {
   Heading,
   Input,
@@ -19,7 +19,7 @@ import {
   handleProductHistory,
 } from './helperFunctions';
 
-function addProduct(e, fieldValues, products, toast) {
+function addProduct(e, fieldValues, products, toast, history) {
   e.preventDefault();
 
   const currentProducts = products || [];
@@ -39,6 +39,8 @@ function addProduct(e, fieldValues, products, toast) {
 
   handleProductHistory(id, fieldValues);
 
+  // if fetch would run success toast and push only if success status recieved from back-end
+  history.push('/products');
   toast({
     title: 'Product created successfully!',
 
@@ -63,6 +65,7 @@ function CreateProduct() {
   const [fieldValues, setFieldValues] = useState(initFieldValues);
   const currentProducts = JSON.parse(localStorage.getItem('products'));
   const toast = useToast();
+  const history = useHistory();
 
   return (
     <>
@@ -72,8 +75,7 @@ function CreateProduct() {
       <Stack maxW="800px" pt="10">
         <form
           onSubmit={(e) => {
-            addProduct(e, fieldValues, currentProducts, toast);
-            setFieldValues(initFieldValues);
+            addProduct(e, fieldValues, currentProducts, toast, history);
           }}
         >
           <Stack direction="row">
