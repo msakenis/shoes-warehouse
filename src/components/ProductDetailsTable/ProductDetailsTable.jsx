@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { object } from 'prop-types';
 
 function ProductDetailsTable({ product }) {
   return (
@@ -41,5 +42,9 @@ function ProductDetailsTable({ product }) {
     </Table>
   );
 }
+
+ProductDetailsTable.propTypes = {
+  product: object.isRequired,
+};
 
 export default ProductDetailsTable;
