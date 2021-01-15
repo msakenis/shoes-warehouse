@@ -55,7 +55,7 @@ export function reducer(data, action) {
           updatedProductHistory = handleNewHistory(
             updatedProductHistory,
             product,
-            'quantity'
+            'quantityHistory'
           );
         }
 
@@ -70,7 +70,7 @@ export function reducer(data, action) {
           updatedProductHistory = handleNewHistory(
             updatedProductHistory,
             product,
-            'price'
+            'priceHistory'
           );
         }
         return product;

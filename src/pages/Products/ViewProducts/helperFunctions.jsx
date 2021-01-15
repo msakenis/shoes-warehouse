@@ -25,7 +25,7 @@ export function setDefaultPrices(data) {
 export function handleDeleteHistory(action) {
   const productsHistory = JSON.parse(localStorage.getItem('productsHistory'));
   const updatedProductHistory = productsHistory.filter(
-    (product) => product.productId !== action.payload.id
+    (product) => product.id !== action.payload.id
   );
   localStorage.setItem(
     'productsHistory',
@@ -37,16 +37,21 @@ export function handleNewHistory(productHistory, product, type) {
   let historyArr = [];
   let historyValue;
   return productHistory.map((item) => {
-    if (item.productId === product.id) {
-      if (type === 'price') {
+    if (item.id === product.id) {
+      if (type === 'priceHistory') {
         historyValue = +product.price;
         historyArr = item.priceHistory;
-      } else if (type === 'quantity') {
+      } else if (type === 'quantityHistory') {
         historyArr = item.quantityHistory;
         historyValue = +product.currentQnty;
       }
 
       historyArr.push([Date.now(), historyValue]);
+
+      //keep only last 5 records
+      if (historyArr.length > 5) {
+        item = { ...item, [type]: historyArr.slice(-5) };
+      }
     }
     return item;
   });
