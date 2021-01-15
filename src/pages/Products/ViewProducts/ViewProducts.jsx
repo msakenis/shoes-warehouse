@@ -87,7 +87,13 @@ function ViewProducts() {
                   // changes color to ligher to look like disabled if not active
                   <Tr
                     key={index}
-                    color={!(String(row.active) === 'true') && 'gray.200'}
+                    color={
+                      !(String(row.active) === 'true')
+                        ? 'gray.200'
+                        : row.currentQnty === 0
+                        ? 'red.600'
+                        : ''
+                    }
                   >
                     <Td>{index + 1}</Td>
                     <Td>{row.name}</Td>
@@ -95,7 +101,7 @@ function ViewProducts() {
                     <Td>{row.type}</Td>
                     <Td>{row.weight / 1000} kg</Td>
                     <Td>{row.color}</Td>
-                    <Td>{row.currentQnty || 0}</Td>
+                    <Td>{row.currentQnty}</Td>
                     <Td>
                       {
                         <NumberField
