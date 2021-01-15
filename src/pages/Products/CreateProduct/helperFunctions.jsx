@@ -13,7 +13,7 @@ export function generateUniqueId(products) {
 export function handleProductHistory(id, fieldValues) {
   const thisProductHistory = {
     // sets initial history of product
-    productId: id,
+    id,
     priceHistory: [[Date.now(), +fieldValues.price]],
     quantityHistory: [[Date.now(), +fieldValues.currentQnty]],
   };

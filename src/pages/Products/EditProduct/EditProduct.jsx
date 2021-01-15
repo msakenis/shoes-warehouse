@@ -44,10 +44,9 @@ function editProduct(e, id, fieldValues, currentProducts, toast) {
 
 function EditProduct() {
   const { id } = useParams();
-  const product = getChosenProduct(id);
-  const [fieldValues, setFieldValues] = useState(product);
-
   const currentProducts = JSON.parse(localStorage.getItem('products'));
+  const product = getChosenProduct(id, currentProducts);
+  const [fieldValues, setFieldValues] = useState(product);
   const toast = useToast();
   const history = useHistory();
   return (
