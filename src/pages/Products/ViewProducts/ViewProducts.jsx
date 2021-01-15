@@ -89,7 +89,7 @@ function ViewProducts() {
                     key={index}
                     color={
                       !(String(row.active) === 'true')
-                        ? 'gray.200'
+                        ? 'gray.400'
                         : row.currentQnty === 0
                         ? 'red.600'
                         : ''
