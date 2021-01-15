@@ -33,7 +33,12 @@ export function handleDeleteHistory(action) {
   );
 }
 
-export function handleNewHistory(productHistory, product, type) {
+export function handleNewHistory(
+  productHistory,
+  product,
+  type,
+  enteredQuantity
+) {
   let historyArr = [];
   let historyValue;
   return productHistory.map((item) => {
@@ -43,7 +48,7 @@ export function handleNewHistory(productHistory, product, type) {
         historyArr = item.priceHistory;
       } else if (type === 'quantityHistory') {
         historyArr = item.quantityHistory;
-        historyValue = +product.currentQnty;
+        historyValue = +enteredQuantity;
       }
 
       historyArr.push([Date.now(), historyValue]);

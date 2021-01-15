@@ -52,7 +52,6 @@ export const quantityHistoryOptions = (quantityHistory, productName) => {
       title: {
         text: `Quantity (pcs)`,
       },
-      min: 0,
     },
     plotOptions: {
       line: {

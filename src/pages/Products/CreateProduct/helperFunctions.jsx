@@ -15,7 +15,7 @@ export function handleProductHistory(id, fieldValues) {
     // sets initial history of product
     id,
     priceHistory: [[Date.now(), +fieldValues.price]],
-    quantityHistory: [[Date.now(), +fieldValues.currentQnty]],
+    quantityHistory: [],
   };
 
   const productsHistory =
