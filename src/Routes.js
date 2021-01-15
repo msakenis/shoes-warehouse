@@ -5,7 +5,7 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import { Spinner, Container } from '@chakra-ui/react';
+import { Spinner, Container, Stack } from '@chakra-ui/react';
 import { NavBar } from './components';
 
 const ViewProductslazy = lazy(() =>
@@ -25,7 +25,13 @@ function Routes() {
   return (
     <Router>
       <NavBar />
-      <Suspense fallback={<Spinner size="xl" />}>
+      <Suspense
+        fallback={
+          <Stack align="center" mt="30">
+            <Spinner size="xl" />
+          </Stack>
+        }
+      >
         <Container maxW="7xl">
           <Switch>
             <Route exact path="/">
