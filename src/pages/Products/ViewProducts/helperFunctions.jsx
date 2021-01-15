@@ -32,3 +32,22 @@ export function handleDeleteHistory(action) {
     JSON.stringify(updatedProductHistory)
   );
 }
+
+export function handleNewHistory(productHistory, product, type) {
+  let historyArr = [];
+  let historyValue;
+  return productHistory.map((item) => {
+    if (item.productId === product.id) {
+      if (type === 'price') {
+        historyValue = +product.price;
+        historyArr = item.priceHistory;
+      } else if (type === 'quantity') {
+        historyArr = item.quantityHistory;
+        historyValue = +product.currentQnty;
+      }
+
+      historyArr.push([Date.now(), historyValue]);
+    }
+    return item;
+  });
+}

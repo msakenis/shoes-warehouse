@@ -1,5 +1,9 @@
 import ACTIONS from '../../../actions';
-import { setDefaultPrices, handleDeleteHistory } from './helperFunctions';
+import {
+  setDefaultPrices,
+  handleDeleteHistory,
+  handleNewHistory,
+} from './helperFunctions';
 
 export function reducer(data, action) {
   switch (action.type) {
@@ -28,40 +32,46 @@ export function reducer(data, action) {
       handleDeleteHistory(action);
 
       return productData;
-    case ACTIONS.UPDATE_PRODUCTS:
-      let priceHistoryArr = [];
-      let updatedProductHistory = action.payload.productsHistory;
-      const updatedProducts = data.map((product) => {
-        // most iteractions with data would do in back-end. In front end usually you fetch already filtered data
 
-        if (action.payload.quantity[product.id]) {
+    case ACTIONS.UPDATE_PRODUCTS:
+      let updatedProductHistory = action.payload.productsHistory;
+
+      // most iteractions with data would do in back-end without data mutation. In front end usually you fetch already filtered data
+      const updatedProducts = data.map((product) => {
+        const enteredQuantity = action.payload.quantity[product.id];
+        const enteredPrices = action.payload.price[product.id];
+
+        //quantity management section
+        if (enteredQuantity && +enteredQuantity !== 0) {
           product = {
             ...product,
             currentQnty:
-              (+product.currentQnty || 0) +
-                +action.payload.quantity[product.id] <
-              0
+              (+product.currentQnty || 0) + +enteredQuantity < 0
                 ? 0
-                : (+product.currentQnty || 0) +
-                  +action.payload.quantity[product.id],
+                : (+product.currentQnty || 0) + +enteredQuantity,
           };
+
+          //quantity history management
+          updatedProductHistory = handleNewHistory(
+            updatedProductHistory,
+            product,
+            'quantity'
+          );
         }
 
-        if (+action.payload.price[product.id] !== +product.price) {
+        //price management section
+        if (+enteredPrices !== +product.price) {
           product = {
             ...product,
-            price: +action.payload.price[product.id] || 0,
+            price: +enteredPrices || 0,
           };
-          updatedProductHistory = action.payload.productsHistory.map((item) => {
-            if (item.productId === product.id) {
-              priceHistoryArr = item.priceHistory;
-              priceHistoryArr.push([
-                Date.now(),
-                +action.payload.price[product.id],
-              ]);
-            }
-            return item;
-          });
+
+          //price history management
+          updatedProductHistory = handleNewHistory(
+            updatedProductHistory,
+            product,
+            'price'
+          );
         }
         return product;
       });
